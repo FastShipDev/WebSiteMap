@@ -1,451 +1,315 @@
-
-{% extends 'base.html.twig' %}
-
-{% block title %}Packages & Travels{% endblock %}
-
-{% block stylesheets %}
-{{ parent() }}
-<style>
-    :root {
-        --primary-color: #000000;
-        --primary-color-dark: #111111;
-        --secondary-color: #333333;
-        --text-color: #f0f0f0;
-        --text-muted: #a0a0a0;
-        --background-dark: #121212;
-        --card-bg: #1e1e1e;
-        --border-color: #333333;
-        --border-radius: 4px;
-        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        --transition-speed: 0.2s;
-        --accent-color: #ffffff;
-    }
-    
-    body {
-        font-family: 'Roboto Mono', 'SF Mono', 'JetBrains Mono', monospace;
-        color: var(--text-color);
-        background-color: var(--background-dark);
-        line-height: 1.6;
-    }
-    
-    .page-header {
-        text-align: center;
-        padding: 2rem 0;
-        margin-bottom: 2rem;
-        background: var(--primary-color);
-        border-bottom: 1px solid var(--accent-color);
-        color: var(--accent-color);
-        position: relative;
-    }
-    
-    .page-header::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 1px;
-        background-color: var(--accent-color);
-    }
-    
-    .page-header h1 {
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        font-size: 2.5rem;
-        letter-spacing: -0.5px;
-        text-transform: uppercase;
-    }
-    
-    .section-header {
-        position: relative;
-        margin-bottom: 2rem;
-        padding-bottom: 0.5rem;
-        font-weight: 600;
-        color: var(--accent-color);
-        border-bottom: 1px solid var(--accent-color);
-        display: inline-block;
-        font-size: 1.25rem;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-    }
-    
-    .tech-card {
-        background-color: var(--card-bg);
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        border: 1px solid var(--border-color);
-        transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
-    
-    .tech-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-        border-color: var(--accent-color);
-    }
-    
-    .tech-card:hover::after {
-        opacity: 1;
-    }
-    
-    .tech-card::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background-color: var(--accent-color);
-        opacity: 0;
-        transition: opacity var(--transition-speed);
-    }
-    
-    .tech-card .card-img-container {
-        height: 160px;
-        overflow: hidden;
-        background-color: #0a0a0a;
-        position: relative;
-    }
-    
-    .tech-card .card-img-container::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%);
-    }
-    
-    .tech-card .card-img-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: grayscale(100%);
-        transition: filter var(--transition-speed);
-    }
-    
-    .tech-card:hover .card-img-container img {
-        filter: grayscale(70%);
-    }
-    
-    .tech-card .card-body {
-        padding: 1.5rem;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .tech-card .card-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: var(--accent-color);
-    }
-    
-    .tech-card .card-detail {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.75rem;
-        border-bottom: 1px dotted var(--border-color);
-        padding-bottom: 0.5rem;
-    }
-    
-    .tech-card .detail-label {
-        font-weight: 500;
-        color: var(--text-muted);
-        display: flex;
-        align-items: center;
-    }
-    
-    .tech-card .detail-label::before {
-        content: '//';
-        margin-right: 0.5rem;
-        font-size: 0.875rem;
-        color: var(--accent-color);
-        opacity: 0.7;
-    }
-    
-    .tech-card .detail-value {
-        text-align: right;
-        font-weight: 500;
-        color: var(--accent-color);
-    }
-    
-    .tech-card .card-footer {
-        padding: 1rem 1.5rem;
-        background-color: rgba(255, 255, 255, 0.03);
-        border-top: 1px solid var(--border-color);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    
-    .rating-container {
-        display: flex;
-        align-items: center;
-    }
-    
-    .star-icon {
-        color: var(--accent-color);
-        margin-right: 0.25rem;
-    }
-    
-    .rating-count {
-        color: var(--text-muted);
-        font-size: 0.875rem;
-        margin-left: 0.5rem;
-    }
-    
-    .badge {
-        display: inline-block;
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        border-radius: var(--border-radius);
-        background-color: transparent;
-        color: var(--accent-color);
-        margin-bottom: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border: 1px solid var(--accent-color);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .badge::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.1);
-        transition: transform 0.5s;
-    }
-    
-    .tech-card:hover .badge::after {
-        transform: translateX(100%);
-    }
-    
-    .route-container {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding: 0.5rem;
-        background-color: rgba(255, 255, 255, 0.03);
-        border-radius: var(--border-radius);
-    }
-    
-    .route-arrow {
-        margin: 0 0.5rem;
-        color: var(--accent-color);
-    }
-    
-    .route-city {
-        font-weight: 500;
-        color: var(--accent-color);
-    }
-    
-    .date-time {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 1rem;
-        padding: 0.5rem;
-        background-color: rgba(255, 255, 255, 0.03);
-        border-radius: var(--border-radius);
-    }
-    
-    .date-time-icon {
-        margin-right: 0.75rem;
-        color: var(--accent-color);
-        font-size: 1.25rem;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 992px) {
-        .col-lg-4 {
-            flex: 0 0 50%;
-            max-width: 50%;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastShip</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8A2BE2;
+            --secondary-color: #F5F5F7;
         }
-    }
-    
-    @media (max-width: 768px) {
-        .col-lg-4, .col-md-6 {
-            flex: 0 0 100%;
-            max-width: 100%;
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--secondary-color);
         }
-        
-        .tech-card {
-            margin-bottom: 1.5rem;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: white;
         }
-        
-        .page-header h1 {
-            font-size: 2rem;
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
         }
-        
-        .section-header {
-            font-size: 1.1rem;
+        .logo span {
+            color: var(--primary-color);
         }
-        
-        .container {
-            padding-left: 1rem;
-            padding-right: 1rem;
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #F0E6FA;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary-color);
+            font-weight: bold;
         }
-    }
-    
-    /* Terminal-style cursor effect */
-    .page-header p::after {
-        content: '|';
-        animation: blink 1s step-end infinite;
-    }
-    
-    @keyframes blink {
-        from, to { opacity: 1; }
-        50% { opacity: 0; }
-    }
-    
-    /* Grid enhancement */
-    .row {
-        display: flex;
-        flex-wrap: wrap;
-        margin-right: -15px;
-        margin-left: -15px;
-    }
-    
-    /* Code-style touches */
-    .container::before {
-        content: '/* Packages & Travels */ ';
-        display: block;
-        color: var(--text-muted);
-        margin-bottom: 1rem;
-        font-family: monospace;
-    }
-    
-    /* Futuristic grid lines */
-    .container {
-        position: relative;
-        z-index: 1;
-    }
-    
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: 
-            linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-        background-size: 25px 25px;
-        z-index: -1;
-    }
-</style>
-{% endblock %}
-
-{% block body %}
-<header class="page-header">
-    <div class="container">
-        <h1>Packages & Travels</h1>
-        <p>Find the best delivery options and travel opportunities</p>
-    </div>
-</header>
-
-<div class="container py-5">
-    <div class="row mb-5">
-        <div class="col-12">
-            <h2 class="section-header">Available Packages</h2>
+        .welcome-section {
+            padding: 2rem 1rem;
+        }
+        .welcome-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .welcome-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .tab {
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.5rem;
+            background-color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            font-weight: 500;
+        }
+        .tab.active {
+            background-color: #F0E6FA;
+            color: var(--primary-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: none;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 0 1rem 0;
+            border: none;
+            background-color: transparent;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        .card-subtitle {
+            color: #666;
+        }
+        .price-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-weight: bold;
+        }
+        .package-info {
+            margin: 1rem 0;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+        .btn-outline {
+            border: 1px solid #ddd;
+            background-color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+        }
+        .location-dot {
+            width: 36px;
+            height: 36px;
+            background-color: #F0E6FA;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .new-item-btn {
+            border: 1px solid #ddd;
+            background-color: white;
+            padding: 0.8rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            margin-top: 1rem;
+            text-decoration: none;
+            color: black;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Fast<span>Ship</span></div>
+        <div class="d-flex align-items-center">
+            <a href="{{ path('earn_money_traveling') }}" class="me-3 text-decoration-none" style="color: var(--primary-color); font-weight: 500;">Earn While Traveling</a>
+            <div class="avatar">FS</div>
         </div>
     </div>
-    
-    <div class="row mb-5">
-        {% for package in packages %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="tech-card">
-                    {% if package.photoUrl %}
-                        <div class="card-img-container">
-                            <img src="{{ package.photoUrl }}" alt="Package image">
-                        </div>
-                    {% endif %}
-                    <div class="card-body">
-                        <span class="badge">{{ package.type }}</span>
-                        
-                        <div class="card-detail">
-                            <span class="detail-label">Weight</span>
-                            <span class="detail-value">{{ package.weight }}kg</span>
-                        </div>
-                        
-                        <div class="card-detail">
-                            <span class="detail-label">Size</span>
-                            <span class="detail-value">{{ package.size }}</span>
-                        </div>
-                        
-                        <div class="card-detail">
-                            <span class="detail-label">Price</span>
-                            <span class="detail-value">{{ package.initialPrice }}€</span>
-                        </div>
-                        
-                        <div class="card-detail">
-                            <span class="detail-label">Delivery by</span>
-                            <span class="detail-value">{{ package.maxDeliveryDate|date('d/m/Y') }}</span>
+
+    <div class="welcome-section">
+        <h1 class="welcome-title">Welcome to FastShip</h1>
+        <p class="welcome-subtitle">Connect your trips and packages efficiently</p>
+
+        <div class="tabs">
+            <button class="tab active" data-target="packages">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box" viewBox="0 0 16 16">
+                    <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
+                </svg>
+                Available Packages
+            </button>
+            <button class="tab" data-target="trips">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-airplane" viewBox="0 0 16 16">
+                    <path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Z"/>
+                </svg>
+                Available Trips
+            </button>
+        </div>
+
+        <div id="packages-container">
+            {% for package in packages %}
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">{{ package.type }}</h2>
+                        <p class="card-subtitle">{% if package.photoUrl %}{{ package.type }}{% else %}{{ package.type }}{% endif %}</p>
+                        {% if package.photoUrl %}
+                        <img src="{{ package.photoUrl }}" alt="{{ package.type }}" class="img-fluid mt-2" style="max-height: 150px; border-radius: 0.5rem;">
+                        {% endif %}
+                        <div class="mt-2">
+                            <span class="badge bg-info">{{ package.user.totalRatings }} ratings</span>
+                            <span class="badge bg-success">{{ package.user.numberShippingSuccess }} successful shipments</span>
                         </div>
                     </div>
-                    
-                    <div class="card-footer">
-                        <div class="rating-container">
-                            <span class="star-icon">★</span>
-                            <span>{{ package.user.averageRating }}/5</span>
-                            <span class="rating-count">({{ package.user.totalRatings }})</span>
+                    <span class="price-badge">{{ package.initialPrice }}€</span>
+                </div>
+                <div class="package-info">
+                    <div class="info-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16">
+                            <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l1.52.57L9 2.111l5.634 1.959 1.52-.57L8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
+                        </svg>
+                        {{ package.weight }} kg • Size {{ package.size }}
+                    </div>
+                    <div class="info-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                        </svg>
+                        Delivery by: {{ package.maxDeliveryDate|date('d/m/Y') }}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a href="https://fast-ship.vercel.app" class="btn btn-outline">View Details</a>
+                    <a href="https://fast-ship.vercel.app" class="btn btn-primary">Negotiate</a>
+                </div>
+            </div>
+            {% endfor %}
+
+            <a href="https://fast-ship.vercel.app" class="new-item-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+                Negotiate a new shipment
+            </a>
+        </div>
+
+        <div id="trips-container" class="hidden">
+            {% for travel in travels %}
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">{{ travel.typeTransport }}</h2>
+                        <div class="mt-2">
+                            <span class="badge bg-info">{{ travel.user.totalRatings }} ratings</span>
+                            <span class="badge bg-success">{{ travel.user.numberTravelSuccess }} successful trips</span>
+                        </div>
+                    </div>
+                    <span class="badge bg-light text-dark">Trip #{{ loop.index }}</span>
+                </div>
+                <div class="package-info">
+                    <div class="info-item">
+                        <div class="location-dot">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div>Departure</div>
+                            <div class="text-muted small">{{ travel.startCity }}</div>
+                            <div class="text-end">{{ travel.dateTravel|date('d/m/Y') }}<br>{{ travel.dateTravel|date('H:i') }}</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="location-dot">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div>Arrival</div>
+                            <div class="text-muted small">{{ travel.destinationCity }}</div>
+                            <div class="text-end">{{ travel.arrivalDate|date('d/m/Y') }}<br>{{ travel.arrivalDate|date('H:i') }}</div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-12">
-            <h2 class="section-header">Available Travels</h2>
-        </div>
-    </div>
-    
-    <div class="row">
-        {% for travel in travels %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="tech-card">
-                    <div class="card-body">
-                        <span class="badge">{{ travel.typeTransport }}</span>
-                        
-                        <div class="route-container">
-                            <span class="route-city">{{ travel.startCity }}</span>
-                            <span class="route-arrow">→</span>
-                            <span class="route-city">{{ travel.destinationCity }}</span>
-                        </div>
-                        
-                        <div class="date-time">
-                            <span class="date-time-icon">⏱</span>
-                            <div>
-                                <div><strong>Departure:</strong> {{ travel.dateTravel|date('d/m/Y H:i') }}</div>
-                                <div><strong>Arrival:</strong> {{ travel.arrivalDate|date('d/m/Y H:i') }}</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card-footer">
-                        <div class="rating-container">
-                            <span class="star-icon">★</span>
-                            <span>{{ travel.user.averageRating }}/5</span>
-                            <span class="rating-count">({{ travel.user.totalRatings }})</span>
-                        </div>
-                    </div>
+                <div class="d-flex justify-content-between">
+                    <a href="https://fast-ship.vercel.app" class="btn btn-outline">Notify User</a>
+                    <a href="https://fast-ship.vercel.app" class="btn btn-primary">Contact</a>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
+
+            <a href="https://fast-ship.vercel.app" class="new-item-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+                Add a new trip
+            </a>
+        </div>
     </div>
-</div>
-{% endblock %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const packagesContainer = document.getElementById('packages-container');
+            const tripsContainer = document.getElementById('trips-container');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Show/hide containers based on the active tab
+                    if (this.dataset.target === 'packages') {
+                        packagesContainer.classList.remove('hidden');
+                        tripsContainer.classList.add('hidden');
+                    } else {
+                        packagesContainer.classList.add('hidden');
+                        tripsContainer.classList.remove('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

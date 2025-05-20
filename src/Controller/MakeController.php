@@ -16,6 +16,7 @@ final class MakeController extends AbstractController
         $this->client = $client;
     }
 
+    #[Route('/', name: 'app_index')]
     #[Route('/make', name: 'app_make')]
     public function index(): Response
     {
@@ -36,6 +37,14 @@ final class MakeController extends AbstractController
             'controller_name' => 'MakeController',
             'packages' => $packages['dataIsSucces']['packages'],
             'travels' => $travels['dataIsSucces']['travelsData']
+        ]);
+    }
+    
+    #[Route('/earn-money-traveling', name: 'earn_money_traveling')]
+    public function earnMoneyTraveling(): Response
+    {
+        return $this->render('make/earn-money-traveling.html.twig', [
+            'controller_name' => 'MakeController'
         ]);
     }
 }
