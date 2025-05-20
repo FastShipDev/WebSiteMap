@@ -1,451 +1,165 @@
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Packages & Travels{% endblock %}
-
-{% block stylesheets %}
-{{ parent() }}
-<style>
-    :root {
-        --primary-color: #000000;
-        --primary-color-dark: #111111;
-        --secondary-color: #333333;
-        --text-color: #f0f0f0;
-        --text-muted: #a0a0a0;
-        --background-dark: #121212;
-        --card-bg: #1e1e1e;
-        --border-color: #333333;
-        --border-radius: 4px;
-        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        --transition-speed: 0.2s;
-        --accent-color: #ffffff;
-    }
-    
-    body {
-        font-family: 'Roboto Mono', 'SF Mono', 'JetBrains Mono', monospace;
-        color: var(--text-color);
-        background-color: var(--background-dark);
-        line-height: 1.6;
-    }
-    
-    .page-header {
-        text-align: center;
-        padding: 2rem 0;
-        margin-bottom: 2rem;
-        background: var(--primary-color);
-        border-bottom: 1px solid var(--accent-color);
-        color: var(--accent-color);
-        position: relative;
-    }
-    
-    .page-header::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 1px;
-        background-color: var(--accent-color);
-    }
-    
-    .page-header h1 {
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        font-size: 2.5rem;
-        letter-spacing: -0.5px;
-        text-transform: uppercase;
-    }
-    
-    .section-header {
-        position: relative;
-        margin-bottom: 2rem;
-        padding-bottom: 0.5rem;
-        font-weight: 600;
-        color: var(--accent-color);
-        border-bottom: 1px solid var(--accent-color);
-        display: inline-block;
-        font-size: 1.25rem;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-    }
-    
-    .tech-card {
-        background-color: var(--card-bg);
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        border: 1px solid var(--border-color);
-        transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
-    
-    .tech-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-        border-color: var(--accent-color);
-    }
-    
-    .tech-card:hover::after {
-        opacity: 1;
-    }
-    
-    .tech-card::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background-color: var(--accent-color);
-        opacity: 0;
-        transition: opacity var(--transition-speed);
-    }
-    
-    .tech-card .card-img-container {
-        height: 160px;
-        overflow: hidden;
-        background-color: #0a0a0a;
-        position: relative;
-    }
-    
-    .tech-card .card-img-container::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%);
-    }
-    
-    .tech-card .card-img-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: grayscale(100%);
-        transition: filter var(--transition-speed);
-    }
-    
-    .tech-card:hover .card-img-container img {
-        filter: grayscale(70%);
-    }
-    
-    .tech-card .card-body {
-        padding: 1.5rem;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .tech-card .card-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: var(--accent-color);
-    }
-    
-    .tech-card .card-detail {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.75rem;
-        border-bottom: 1px dotted var(--border-color);
-        padding-bottom: 0.5rem;
-    }
-    
-    .tech-card .detail-label {
-        font-weight: 500;
-        color: var(--text-muted);
-        display: flex;
-        align-items: center;
-    }
-    
-    .tech-card .detail-label::before {
-        content: '//';
-        margin-right: 0.5rem;
-        font-size: 0.875rem;
-        color: var(--accent-color);
-        opacity: 0.7;
-    }
-    
-    .tech-card .detail-value {
-        text-align: right;
-        font-weight: 500;
-        color: var(--accent-color);
-    }
-    
-    .tech-card .card-footer {
-        padding: 1rem 1.5rem;
-        background-color: rgba(255, 255, 255, 0.03);
-        border-top: 1px solid var(--border-color);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    
-    .rating-container {
-        display: flex;
-        align-items: center;
-    }
-    
-    .star-icon {
-        color: var(--accent-color);
-        margin-right: 0.25rem;
-    }
-    
-    .rating-count {
-        color: var(--text-muted);
-        font-size: 0.875rem;
-        margin-left: 0.5rem;
-    }
-    
-    .badge {
-        display: inline-block;
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        border-radius: var(--border-radius);
-        background-color: transparent;
-        color: var(--accent-color);
-        margin-bottom: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border: 1px solid var(--accent-color);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .badge::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.1);
-        transition: transform 0.5s;
-    }
-    
-    .tech-card:hover .badge::after {
-        transform: translateX(100%);
-    }
-    
-    .route-container {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding: 0.5rem;
-        background-color: rgba(255, 255, 255, 0.03);
-        border-radius: var(--border-radius);
-    }
-    
-    .route-arrow {
-        margin: 0 0.5rem;
-        color: var(--accent-color);
-    }
-    
-    .route-city {
-        font-weight: 500;
-        color: var(--accent-color);
-    }
-    
-    .date-time {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 1rem;
-        padding: 0.5rem;
-        background-color: rgba(255, 255, 255, 0.03);
-        border-radius: var(--border-radius);
-    }
-    
-    .date-time-icon {
-        margin-right: 0.75rem;
-        color: var(--accent-color);
-        font-size: 1.25rem;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 992px) {
-        .col-lg-4 {
-            flex: 0 0 50%;
-            max-width: 50%;
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .col-lg-4, .col-md-6 {
-            flex: 0 0 100%;
-            max-width: 100%;
-        }
-        
-        .tech-card {
-            margin-bottom: 1.5rem;
-        }
-        
-        .page-header h1 {
-            font-size: 2rem;
-        }
-        
-        .section-header {
-            font-size: 1.1rem;
-        }
-        
-        .container {
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
-    }
-    
-    /* Terminal-style cursor effect */
-    .page-header p::after {
-        content: '|';
-        animation: blink 1s step-end infinite;
-    }
-    
-    @keyframes blink {
-        from, to { opacity: 1; }
-        50% { opacity: 0; }
-    }
-    
-    /* Grid enhancement */
-    .row {
-        display: flex;
-        flex-wrap: wrap;
-        margin-right: -15px;
-        margin-left: -15px;
-    }
-    
-    /* Code-style touches */
-    .container::before {
-        content: '/* Packages & Travels */ ';
-        display: block;
-        color: var(--text-muted);
-        margin-bottom: 1rem;
-        font-family: monospace;
-    }
-    
-    /* Futuristic grid lines */
-    .container {
-        position: relative;
-        z-index: 1;
-    }
-    
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: 
-            linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-        background-size: 25px 25px;
-        z-index: -1;
-    }
-</style>
-{% endblock %}
+{% block title %}FastShip - Packages & Travels{% endblock %}
 
 {% block body %}
-<header class="page-header">
-    <div class="container">
-        <h1>Packages & Travels</h1>
-        <p>Find the best delivery options and travel opportunities</p>
-    </div>
-</header>
+<div class="container-fluid px-4 py-5 bg-dark text-white">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <header class="mb-5 text-center">
+                <h1 class="display-4 fw-bold">FastShip</h1>
+                <p class="lead">Connectez vos voyages et vos colis</p>
+            </header>
 
-<div class="container py-5">
-    <div class="row mb-5">
-        <div class="col-12">
-            <h2 class="section-header">Available Packages</h2>
-        </div>
-    </div>
-    
-    <div class="row mb-5">
-        {% for package in packages %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="tech-card">
-                    {% if package.photoUrl %}
-                        <div class="card-img-container">
-                            <img src="{{ package.photoUrl }}" alt="Package image">
-                        </div>
-                    {% endif %}
-                    <div class="card-body">
-                        <span class="badge">{{ package.type }}</span>
-                        
-                        <div class="card-detail">
-                            <span class="detail-label">Weight</span>
-                            <span class="detail-value">{{ package.weight }}kg</span>
-                        </div>
-                        
-                        <div class="card-detail">
-                            <span class="detail-label">Size</span>
-                            <span class="detail-value">{{ package.size }}</span>
-                        </div>
-                        
-                        <div class="card-detail">
-                            <span class="detail-label">Price</span>
-                            <span class="detail-value">{{ package.initialPrice }}€</span>
-                        </div>
-                        
-                        <div class="card-detail">
-                            <span class="detail-label">Delivery by</span>
-                            <span class="detail-value">{{ package.maxDeliveryDate|date('d/m/Y') }}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="card-footer">
-                        <div class="rating-container">
-                            <span class="star-icon">★</span>
-                            <span>{{ package.user.averageRating }}/5</span>
-                            <span class="rating-count">({{ package.user.totalRatings }})</span>
-                        </div>
-                    </div>
+            <section class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="fs-1">Colis disponibles</h2>
+                    <a href="https://fast-ship.vercel.app" class="btn btn-outline-light">+ Négocier un envoi</a>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-12">
-            <h2 class="section-header">Available Travels</h2>
-        </div>
-    </div>
-    
-    <div class="row">
-        {% for travel in travels %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="tech-card">
-                    <div class="card-body">
-                        <span class="badge">{{ travel.typeTransport }}</span>
-                        
-                        <div class="route-container">
-                            <span class="route-city">{{ travel.startCity }}</span>
-                            <span class="route-arrow">→</span>
-                            <span class="route-city">{{ travel.destinationCity }}</span>
-                        </div>
-                        
-                        <div class="date-time">
-                            <span class="date-time-icon">⏱</span>
-                            <div>
-                                <div><strong>Departure:</strong> {{ travel.dateTravel|date('d/m/Y H:i') }}</div>
-                                <div><strong>Arrival:</strong> {{ travel.arrivalDate|date('d/m/Y H:i') }}</div>
+                
+                <div class="row g-4">
+                    {% for package in packages %}
+                        <div class="col-md-4">
+                            <div class="card h-100 bg-dark text-white border border-secondary">
+                                {% if package.photoUrl %}
+                                    <img src="{{ package.photoUrl }}" class="card-img-top" alt="Photo du colis">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h3 class="card-title fs-4">{{ package.type }}</h3>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>{{ package.weight }} kg</span>
+                                        <span>{{ package.initialPrice }}€</span>
+                                    </div>
+                                    <p class="card-text mb-4">
+                                        <span class="d-block">Taille: {{ package.size }}</span>
+                                        <span class="d-block text-light">Livraison avant: {{ package.maxDeliveryDate|date('d/m/Y') }}</span>
+                                    </p>
+                                    <div class="d-flex align-items-center">
+                                        <div class="ratings me-2">
+                                            {% for i in 1..5 %}
+                                                {% if i <= package.user.averageRating %}
+                                                    <i class="bi bi-star-fill text-warning"></i>
+                                                {% else %}
+                                                    <i class="bi bi-star text-warning"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <span class="small text-muted">({{ package.user.totalRatings }})</span>
+                                    </div>
+                                    <a href="https://fast-ship.vercel.app" class="btn btn-outline-light w-100 mt-3">Négocier</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="card-footer">
-                        <div class="rating-container">
-                            <span class="star-icon">★</span>
-                            <span>{{ travel.user.averageRating }}/5</span>
-                            <span class="rating-count">({{ travel.user.totalRatings }})</span>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
-            </div>
-        {% endfor %}
+            </section>
+
+            <section class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="fs-1">Voyages disponibles</h2>
+                    <a href="https://fast-ship.vercel.app" class="btn btn-outline-light">+ Notifier un utilisateur</a>
+                </div>
+                
+                <div class="row g-4">
+                    {% for travel in travels %}
+                        <div class="col-md-4">
+                            <div class="card h-100 bg-dark text-white border border-secondary">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="transport-icon me-3">
+                                            {% if travel.typeTransport == 'Avion' %}
+                                                <i class="bi bi-airplane fs-1"></i>
+                                            {% elseif travel.typeTransport == 'Train' %}
+                                                <i class="bi bi-train-front fs-1"></i>
+                                            {% elseif travel.typeTransport == 'Voiture' %}
+                                                <i class="bi bi-car-front fs-1"></i>
+                                            {% elseif travel.typeTransport == 'Bus' %}
+                                                <i class="bi bi-bus-front fs-1"></i>
+                                            {% else %}
+                                                <i class="bi bi-box-seam fs-1"></i>
+                                            {% endif %}
+                                        </div>
+                                        <h3 class="card-title fs-4 mb-0">{{ travel.typeTransport }}</h3>
+                                    </div>
+                                    
+                                    <div class="journey mb-4">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <div class="fs-5 fw-bold">{{ travel.startCity }}</div>
+                                                <div class="small text-muted">{{ travel.dateTravel|date('d/m/Y') }}</div>
+                                                <div class="small text-muted">{{ travel.dateTravel|date('H:i') }}</div>
+                                            </div>
+                                            <div class="journey-line flex-grow-1 mx-3 position-relative">
+                                                <div class="border-top border-secondary"></div>
+                                                <i class="bi bi-arrow-right position-absolute top-50 start-50 translate-middle"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fs-5 fw-bold">{{ travel.destinationCity }}</div>
+                                                <div class="small text-muted">{{ travel.arrivalDate|date('d/m/Y') }}</div>
+                                                <div class="small text-muted">{{ travel.arrivalDate|date('H:i') }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="ratings me-2">
+                                            {% for i in 1..5 %}
+                                                {% if i <= travel.user.averageRating %}
+                                                    <i class="bi bi-star-fill text-warning"></i>
+                                                {% else %}
+                                                    <i class="bi bi-star text-warning"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <span class="small text-muted">({{ travel.user.totalRatings }})</span>
+                                    </div>
+                                    
+                                    <a href="https://fast-ship.vercel.app" class="btn btn-outline-light w-100">Contacter</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
     </div>
 </div>
+
+<style>
+    body {
+        background-color: #000;
+        color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    
+    .card {
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+    }
+    
+    .journey-line {
+        height: 2px;
+    }
+    
+    .btn-outline-light {
+        border-radius: 4px;
+        padding: 8px 16px;
+        transition: all 0.3s;
+    }
+    
+    .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+    
+    .container-fluid {
+        max-width: 1400px;
+    }
+</style>
 {% endblock %}
