@@ -185,7 +185,14 @@
                 <div class="card-header">
                     <div>
                         <h2 class="card-title">{{ package.type }}</h2>
-                        <p class="card-subtitle">{% if package.photoUrl %}Printer - Canon{% else %}{{ package.type }}{% endif %}</p>
+                        <p class="card-subtitle">{% if package.photoUrl %}{{ package.type }}{% else %}{{ package.type }}{% endif %}</p>
+                        {% if package.photoUrl %}
+                        <img src="{{ package.photoUrl }}" alt="{{ package.type }}" class="img-fluid mt-2" style="max-height: 150px; border-radius: 0.5rem;">
+                        {% endif %}
+                        <div class="mt-2">
+                            <span class="badge bg-info">{{ package.user.totalRatings }} ratings</span>
+                            <span class="badge bg-success">{{ package.user.numberShippingSuccess }} successful shipments</span>
+                        </div>
                     </div>
                     <span class="price-badge">{{ package.initialPrice }}€</span>
                 </div>
@@ -204,13 +211,13 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <a href="https://fast-ship.vercel.app/package/{{ package.idPackage }}" class="btn btn-outline">View Details</a>
-                    <a href="https://fast-ship.vercel.app/negotiate/{{ package.idPackage }}" class="btn btn-primary">Negotiate</a>
+                    <a href="https://fast-ship.vercel.app" class="btn btn-outline">View Details</a>
+                    <a href="https://fast-ship.vercel.app" class="btn btn-primary">Negotiate</a>
                 </div>
             </div>
             {% endfor %}
 
-            <a href="https://fast-ship.vercel.app/new-shipment" class="new-item-btn">
+            <a href="https://fast-ship.vercel.app" class="new-item-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -225,6 +232,10 @@
                 <div class="card-header">
                     <div>
                         <h2 class="card-title">{{ travel.typeTransport }}</h2>
+                        <div class="mt-2">
+                            <span class="badge bg-info">{{ travel.user.totalRatings }} ratings</span>
+                            <span class="badge bg-success">{{ travel.user.numberTravelSuccess }} successful trips</span>
+                        </div>
                     </div>
                     <span class="badge bg-light text-dark">Trip #{{ loop.index }}</span>
                 </div>
@@ -255,13 +266,13 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <a href="https://fast-ship.vercel.app/notify/{{ travel.idTravelPackage }}" class="btn btn-outline">Notify User</a>
-                    <a href="https://fast-ship.vercel.app/contact/{{ travel.idTravelPackage }}" class="btn btn-primary">Contact</a>
+                    <a href="https://fast-ship.vercel.app" class="btn btn-outline">Notify User</a>
+                    <a href="https://fast-ship.vercel.app" class="btn btn-primary">Contact</a>
                 </div>
             </div>
             {% endfor %}
 
-            <a href="https://fast-ship.vercel.app/new-trip" class="new-item-btn">
+            <a href="https://fast-ship.vercel.app" class="new-item-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
