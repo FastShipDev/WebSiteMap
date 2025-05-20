@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Packages & Travels{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2 class="mb-4">Available Packages</h2>
+    <div class="row mb-5">
+        {% for package in packages %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    {% if package.photoUrl %}
+                        <img src="{{ package.photoUrl }}" class="card-img-top" alt="Package image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ package.type }}</h5>
+                        <p class="card-text">
+                            <strong>Weight:</strong> {{ package.weight }}kg<br>
+                            <strong>Size:</strong> {{ package.size }}<br>
+                            <strong>Price:</strong> {{ package.initialPrice }}€<br>
+                            <strong>Delivery by:</strong> {{ package.maxDeliveryDate|date('d/m/Y') }}
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                User Rating: {{ package.user.averageRating }}/5 
+                                ({{ package.user.totalRatings }} ratings)
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h2 class="mb-4">Available Travels</h2>
+    <div class="row">
+        {% for travel in travels %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ travel.typeTransport }}</h5>
+                        <p class="card-text">
+                            <strong>From:</strong> {{ travel.startCity }}<br>
+                            <strong>To:</strong> {{ travel.destinationCity }}<br>
+                            <strong>Departure:</strong> {{ travel.dateTravel|date('d/m/Y H:i') }}<br>
+                            <strong>Arrival:</strong> {{ travel.arrivalDate|date('d/m/Y H:i') }}
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                Traveler Rating: {{ travel.user.averageRating }}/5 
+                                ({{ travel.user.totalRatings }} ratings)
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
