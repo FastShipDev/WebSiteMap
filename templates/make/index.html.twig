@@ -3,163 +3,266 @@
 {% block title %}FastShip - Packages & Travels{% endblock %}
 
 {% block body %}
-<div class="container-fluid px-4 py-5 bg-dark text-white">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <header class="mb-5 text-center">
-                <h1 class="display-4 fw-bold">FastShip</h1>
-                <p class="lead">Connectez vos voyages et vos colis</p>
-            </header>
+<div class="container-fluid p-0">
+    <!-- Navigation header -->
+    <nav class="border-bottom py-3 px-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="logo">
+                <h1 class="fs-4 m-0">Fast<span class="text-purple">Ship</span></h1>
+            </div>
+            <div class="avatar">
+                <span class="badge bg-purple">FS</span>
+            </div>
+        </div>
+    </nav>
 
-            <section class="mb-5">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="fs-1">Colis disponibles</h2>
-                    <a href="https://fast-ship.vercel.app" class="btn btn-outline-light">+ Négocier un envoi</a>
-                </div>
-                
-                <div class="row g-4">
-                    {% for package in packages %}
-                        <div class="col-md-4">
-                            <div class="card h-100 bg-dark text-white border border-secondary">
-                                {% if package.photoUrl %}
-                                    <img src="{{ package.photoUrl }}" class="card-img-top" alt="Photo du colis">
-                                {% endif %}
-                                <div class="card-body">
-                                    <h3 class="card-title fs-4">{{ package.type }}</h3>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>{{ package.weight }} kg</span>
-                                        <span>{{ package.initialPrice }}€</span>
+    <!-- Main content -->
+    <div class="container py-4">
+        <h2 class="mb-2">Welcome to FastShip</h2>
+        <p class="text-secondary mb-4">Connect your trips and packages efficiently</p>
+
+        <!-- Tabs -->
+        <div class="tabs-container mb-4">
+            <div class="tabs d-flex mb-4">
+                <button class="tab-btn active me-2" onclick="switchTab('packages')">
+                    <i class="bi bi-box me-2"></i>Available Packages
+                </button>
+                <button class="tab-btn" onclick="switchTab('travels')">
+                    <i class="bi bi-airplane me-2"></i>Available Trips
+                </button>
+            </div>
+        </div>
+
+        <!-- Packages Section -->
+        <div id="packages-section" class="tab-content active">
+            <div class="row">
+                {% for package in packages %}
+                    <div class="col-12 mb-3">
+                        <div class="card border">
+                            <div class="card-body">
+                                <div class="row g-0">
+                                    <div class="col-md-2">
+                                        {% if package.photoUrl %}
+                                            <div class="package-image bg-light d-flex align-items-center justify-content-center">
+                                                <img src="{{ package.photoUrl }}" alt="Package" class="img-fluid">
+                                            </div>
+                                        {% else %}
+                                            <div class="package-image bg-light d-flex align-items-center justify-content-center">
+                                                <i class="bi bi-box text-secondary fs-1"></i>
+                                            </div>
+                                        {% endif %}
                                     </div>
-                                    <p class="card-text mb-4">
-                                        <span class="d-block">Taille: {{ package.size }}</span>
-                                        <span class="d-block text-light">Livraison avant: {{ package.maxDeliveryDate|date('d/m/Y') }}</span>
-                                    </p>
-                                    <div class="d-flex align-items-center">
-                                        <div class="ratings me-2">
-                                            {% for i in 1..5 %}
-                                                {% if i <= package.user.averageRating %}
-                                                    <i class="bi bi-star-fill text-warning"></i>
-                                                {% else %}
-                                                    <i class="bi bi-star text-warning"></i>
-                                                {% endif %}
-                                            {% endfor %}
+                                    <div class="col-md-8">
+                                        <h3 class="fs-5 mb-1">{{ package.type }}</h3>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="me-4">
+                                                <i class="bi bi-box me-1"></i> {{ package.weight }} kg • Size {{ package.size }}
+                                            </div>
+                                            <div>
+                                                <i class="bi bi-calendar me-1"></i> Delivery by: {{ package.maxDeliveryDate|date('d/m/Y') }}
+                                            </div>
                                         </div>
-                                        <span class="small text-muted">({{ package.user.totalRatings }})</span>
+                                        <div class="ratings small text-secondary">
+                                            <div class="d-flex align-items-center">
+                                                {% for i in 1..5 %}
+                                                    {% if i <= package.user.averageRating %}
+                                                        <i class="bi bi-star-fill text-warning me-1"></i>
+                                                    {% else %}
+                                                        <i class="bi bi-star text-warning me-1"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <span>({{ package.user.totalRatings }})</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <a href="https://fast-ship.vercel.app" class="btn btn-outline-light w-100 mt-3">Négocier</a>
+                                    <div class="col-md-2 d-flex flex-column align-items-end justify-content-between">
+                                        <div class="price-badge">
+                                            <span class="badge bg-purple">{{ package.initialPrice }}€</span>
+                                        </div>
+                                        <div class="d-flex flex-column w-100 mt-3">
+                                            <a href="#" class="btn btn-outline-secondary mb-2 w-100">View Details</a>
+                                            <a href="https://fast-ship.vercel.app" class="btn btn-purple w-100">Negotiate</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
-                </div>
-            </section>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="mt-3">
+                <a href="https://fast-ship.vercel.app" class="btn btn-outline-secondary w-100 py-3">
+                    <i class="bi bi-box me-2"></i> Negotiate a new shipment
+                </a>
+            </div>
+        </div>
 
-            <section class="mb-5">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="fs-1">Voyages disponibles</h2>
-                    <a href="https://fast-ship.vercel.app" class="btn btn-outline-light">+ Notifier un utilisateur</a>
-                </div>
-                
-                <div class="row g-4">
-                    {% for travel in travels %}
-                        <div class="col-md-4">
-                            <div class="card h-100 bg-dark text-white border border-secondary">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="transport-icon me-3">
-                                            {% if travel.typeTransport == 'Avion' %}
-                                                <i class="bi bi-airplane fs-1"></i>
-                                            {% elseif travel.typeTransport == 'Train' %}
-                                                <i class="bi bi-train-front fs-1"></i>
-                                            {% elseif travel.typeTransport == 'Voiture' %}
-                                                <i class="bi bi-car-front fs-1"></i>
-                                            {% elseif travel.typeTransport == 'Bus' %}
-                                                <i class="bi bi-bus-front fs-1"></i>
-                                            {% else %}
-                                                <i class="bi bi-box-seam fs-1"></i>
-                                            {% endif %}
-                                        </div>
-                                        <h3 class="card-title fs-4 mb-0">{{ travel.typeTransport }}</h3>
-                                    </div>
-                                    
-                                    <div class="journey mb-4">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <div class="fs-5 fw-bold">{{ travel.startCity }}</div>
-                                                <div class="small text-muted">{{ travel.dateTravel|date('d/m/Y') }}</div>
-                                                <div class="small text-muted">{{ travel.dateTravel|date('H:i') }}</div>
-                                            </div>
-                                            <div class="journey-line flex-grow-1 mx-3 position-relative">
-                                                <div class="border-top border-secondary"></div>
-                                                <i class="bi bi-arrow-right position-absolute top-50 start-50 translate-middle"></i>
+        <!-- Travels Section -->
+        <div id="travels-section" class="tab-content" style="display: none;">
+            <div class="row">
+                {% for travel in travels %}
+                    <div class="col-12 mb-3">
+                        <div class="card border">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h3 class="fs-5 mb-0">
+                                        {{ travel.typeTransport }}
+                                        <span class="badge bg-light text-dark ms-2">Trip #{{ loop.index }}</span>
+                                    </h3>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-5">
+                                        <div class="d-flex mb-2">
+                                            <div class="location-dot me-2">
+                                                <i class="bi bi-geo-alt-fill text-purple"></i>
                                             </div>
                                             <div>
-                                                <div class="fs-5 fw-bold">{{ travel.destinationCity }}</div>
-                                                <div class="small text-muted">{{ travel.arrivalDate|date('d/m/Y') }}</div>
-                                                <div class="small text-muted">{{ travel.arrivalDate|date('H:i') }}</div>
+                                                <div class="fw-bold">Departure</div>
+                                                <div class="small text-secondary">{{ travel.startCity }}</div>
+                                            </div>
+                                            <div class="ms-auto text-end">
+                                                <div class="fw-bold">{{ travel.dateTravel|date('d/m/Y') }}</div>
+                                                <div class="small text-secondary">{{ travel.dateTravel|date('H:i') }}</div>
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="ratings me-2">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-5">
+                                        <div class="d-flex mb-2">
+                                            <div class="location-dot me-2">
+                                                <i class="bi bi-geo-alt-fill text-purple"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold">Arrival</div>
+                                                <div class="small text-secondary">{{ travel.destinationCity }}</div>
+                                            </div>
+                                            <div class="ms-auto text-end">
+                                                <div class="fw-bold">{{ travel.arrivalDate|date('d/m/Y') }}</div>
+                                                <div class="small text-secondary">{{ travel.arrivalDate|date('H:i') }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center ratings small text-secondary">
                                             {% for i in 1..5 %}
                                                 {% if i <= travel.user.averageRating %}
-                                                    <i class="bi bi-star-fill text-warning"></i>
+                                                    <i class="bi bi-star-fill text-warning me-1"></i>
                                                 {% else %}
-                                                    <i class="bi bi-star text-warning"></i>
+                                                    <i class="bi bi-star text-warning me-1"></i>
                                                 {% endif %}
                                             {% endfor %}
+                                            <span>({{ travel.user.totalRatings }})</span>
                                         </div>
-                                        <span class="small text-muted">({{ travel.user.totalRatings }})</span>
                                     </div>
-                                    
-                                    <a href="https://fast-ship.vercel.app" class="btn btn-outline-light w-100">Contacter</a>
+                                    <div class="col-md-6 d-flex justify-content-end">
+                                        <a href="#" class="btn btn-outline-secondary me-2">
+                                            <i class="bi bi-person"></i> Notify User
+                                        </a>
+                                        <a href="https://fast-ship.vercel.app" class="btn btn-purple">Contact</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
-                </div>
-            </section>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="mt-3">
+                <a href="https://fast-ship.vercel.app" class="btn btn-outline-secondary w-100 py-3">
+                    <i class="bi bi-airplane me-2"></i> Add a new trip
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
     body {
-        background-color: #000;
-        color: #fff;
+        background-color: #fff;
+        color: #212529;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
     
-    .card {
-        transition: transform 0.3s, box-shadow 0.3s;
-        border-radius: 8px;
-        overflow: hidden;
+    .text-purple, .btn-link {
+        color: #8a2be2 !important;
     }
     
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
-    }
-    
-    .journey-line {
-        height: 2px;
-    }
-    
-    .btn-outline-light {
-        border-radius: 4px;
-        padding: 8px 16px;
-        transition: all 0.3s;
-    }
-    
-    .btn-outline-light:hover {
-        background: rgba(255, 255, 255, 0.2);
+    .bg-purple {
+        background-color: #8a2be2 !important;
         color: #fff;
     }
     
-    .container-fluid {
-        max-width: 1400px;
+    .btn-purple {
+        background-color: #8a2be2;
+        color: #fff;
+        border: none;
+    }
+    
+    .btn-purple:hover {
+        background-color: #7a1ad2;
+        color: #fff;
+    }
+    
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .tab-btn {
+        background: none;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        color: #6c757d;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+    
+    .tab-btn.active {
+        background-color: rgba(138, 43, 226, 0.1);
+        color: #8a2be2;
+        font-weight: 500;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    .package-image {
+        width: 100%;
+        height: 100%;
+        min-height: 120px;
+        border-radius: 4px;
     }
 </style>
+
+<script>
+    function switchTab(tabName) {
+        // Hide all tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.style.display = 'none';
+        });
+        
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab-btn').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Show the selected tab content and set active class
+        if (tabName === 'packages') {
+            document.getElementById('packages-section').style.display = 'block';
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        } else if (tabName === 'travels') {
+            document.getElementById('travels-section').style.display = 'block';
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        }
+    }
+</script>
 {% endblock %}
