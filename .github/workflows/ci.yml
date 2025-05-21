@@ -34,7 +34,7 @@ jobs:
       - name: Check container
         run: |
             docker ps
-            docker exec blogsite ls -la /app
+            docker exec blogsite ls -la /var/www/html
             
       - name: Set lowercase owner
         run: |
