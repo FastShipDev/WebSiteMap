@@ -42,5 +42,5 @@ jobs:
           
       - name: Push Image
         run: |
-            docker tag server-blogsite ghcr.io/${{ env.OWNER_LC }}/blogsite:latest
+            docker tag blogsite ghcr.io/${{ env.OWNER_LC }}/blogsite:latest
             docker push ghcr.io/${{ env.OWNER_LC }}/blogsite:latest
