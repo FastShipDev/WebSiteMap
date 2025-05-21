@@ -20,6 +20,8 @@ COPY . /var/www/html/
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
+ENV APP_ENV=prod
+
 # Installer les dépendances PHP via Composer
 RUN composer install --no-dev --optimize-autoloader \
     && php bin/console cache:clear --env=prod
