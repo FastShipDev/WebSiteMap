@@ -29,5 +29,8 @@ RUN composer install --no-dev --optimize-autoloader \
 # Définir les permissions
 RUN chown -R www-data:www-data /var/www/html/var
 
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
+    && echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 # Exposer le port 80
 EXPOSE 80
