@@ -21,7 +21,8 @@ COPY . /var/www/html/
 WORKDIR /var/www/html
 
 # Installer les dépendances PHP via Composer
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader \
+    && php bin/console cache:clear --env=prod
 
 # Définir les permissions
 RUN chown -R www-data:www-data /var/www/html/var
